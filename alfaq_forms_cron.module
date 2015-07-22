@@ -44,3 +44,25 @@ function alfaq_forms_cron_form($form, &$form_state){
     return system_settings_form($form);
 }
 
+/*
+ * hook_cron
+ */
+function alfaq_forms_cron_cron(){
+    if(variable_get('cronmonitor_enable', 0)){
+        //send email
+        drupal_mail('alfaq_forms_cron', 'cronmonitor_email', 'qwe@qwe.qwe', language_default());
+    }
+}
+
+/*
+ * hook_mail
+ */
+function alfaq_forms_cron_mail($key, &$message, $params) {
+   switch($key){
+       case 'cronmonitor_email':
+           $message['subject'] = t('this is cron monitor');
+           //$message['body'][] = t('this is body on @site_name', array('@site_name' => variable_get('site_name', 'testdrupal-default')));
+           $message['body'][] = t(variable_get('cronmonitor_email_text', ''));
+           break;
+   }
+}
