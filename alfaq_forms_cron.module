@@ -1,0 +1,46 @@
+<?php
+/**
+* @file
+* A description of what your module does.
+*/
+
+//создаем пункт меню в админке hook menu
+function alfaq_forms_cron_menu() {
+    $items['admin/config/cronmonitor'] = array(
+        'title' => 'Cron monitor settings',
+        'type' => MENU_NORMAL_ITEM,
+        //'menu_name' => 'main-menu',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alfaq_forms_cron_form'), // вызов function alfaq_forms_cron_form
+        'access arguments' => array('Administer cronmonitor'),
+    );
+    return $items;
+}
+
+//настрйока доступа к странице
+function alfaq_forms_cron_permission() {
+    return array(
+        'administer cronmonitor' => array(
+            'title' => t('Administer cronmonitor'),
+            'description' => t('Perform administration tasks for my module.'),
+        ),
+    );
+}
+
+// описание по созданию форм From api Quickstart Guide
+//forms API reference
+function alfaq_forms_cron_form($form, &$form_state){
+    $form['cronmonitor_enable'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Enable cronmonitor'),
+        '#default_value' => variable_get('cronmonitor_enable', 0),
+    );
+    $form['cronmonitor_email_text'] = array(
+        '#title' => t('Text'),
+        '#type' => 'textarea',
+        '#description' => t('description for text field'),
+        '#default_value' => variable_get('cronmonitor_email_text', ''),
+    );
+    return system_settings_form($form);
+}
+
